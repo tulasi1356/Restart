@@ -1,0 +1,16 @@
+<div>
+    <h2>Manage Locations</h2>
+
+    <form [formGroup]="locationForm" (ngSubmit)="onSubmit()">
+        <input type="text" formControlName="name" placeholder="Location Name" />
+        <button type="submit">{{ editingLocation ? 'Update Location' : 'Add Location' }}</button>
+    </form>
+
+    <div *ngFor="let location of locations">
+        <p>{{ location.name }} 
+            <button (click)="editLocation(location)">Edit</button>
+            <button (click)="markComplete(location)">Mark Complete</button>
+            <button (click)="deleteLocation(location)">Delete</button>
+        </p>
+    </div>
+</div>
