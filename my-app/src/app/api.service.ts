@@ -45,6 +45,16 @@ export class ApiService {
     return this.http.delete(`${this.apiUrl}/locations/${id}`);
   }
 
+
+  getLocationHistory(locationId: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/locations/${locationId}/history`);
+  }
+  
+  // Delete a history log
+  deleteHistoryLog(historyId: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/locations/history/${historyId}`);
+  }
+
   // --------------------- WorkScopes API ---------------------
 
 

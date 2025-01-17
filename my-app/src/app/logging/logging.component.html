@@ -1,7 +1,7 @@
-<div class="p-4">
+<!-- <div class="p-4">
     <h2 class="text-2xl font-bold mb-4">Logging</h2>
     
-    <!-- Search and Filter -->
+
     <div class="mb-6 space-y-4">
       <input 
         [(ngModel)]="searchTerm"
@@ -34,12 +34,12 @@
       </div>
     </div>
 
-    <!-- Loading Indicator -->
+
     <div *ngIf="loading" class="text-center py-4">
       <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto"></div>
     </div>
 
-    <!-- Logs List -->
+
     <div *ngIf="!loading" class="space-y-4">
       <div *ngFor="let log of filteredLogs" class="border rounded p-4">
         <div class="flex items-center justify-between">
@@ -67,9 +67,78 @@
         </div>
       </div>
 
-      <!-- No Results Message -->
+
       <div *ngIf="filteredLogs.length === 0" class="text-center py-8 text-gray-500">
         No logs found matching your criteria
       </div>
     </div>
+  </div> -->
+
+  <div style="margin: 1rem; padding: 1rem;">
+    <mat-card class="full-width">
+      <mat-card-header >
+        <mat-card-title >
+          <mat-icon class="mr-2">history</mat-icon>
+          Logging History
+        </mat-card-title>
+      </mat-card-header>
+    
+      <mat-card-content>
+        <!-- Filter Controls -->
+        <div class="filters mb-4">
+          <!-- Search Filter -->
+          <!-- <mat-form-field appearance="fill" class="filter-input">
+            <mat-label>Search Location</mat-label>
+            <input matInput [(ngModel)]="searchTerm" (ngModelChange)="applyFilters()" placeholder="Search by location name" />
+          </mat-form-field> -->
+    
+          <!-- Status Filter -->
+          <mat-form-field appearance="fill" class="filter-select">
+            <mat-label>Status</mat-label>
+            <mat-select [(ngModel)]="filterStatus" (selectionChange)="applyFilters()">
+              <mat-option value="all">All Status</mat-option>
+              <mat-option value="completed">Completed</mat-option>
+              <mat-option value="pending">Pending</mat-option>
+            </mat-select>
+          </mat-form-field>
+    
+          <!-- Location Filter -->
+          <mat-form-field appearance="fill" class="filter-select">
+            <mat-label>Location</mat-label>
+            <mat-select [(ngModel)]="filterLocation" (selectionChange)="applyFilters()">
+              <mat-option value="all">All Locations</mat-option>
+              <mat-option *ngFor="let location of locations" [value]="location._id">{{ location.name }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+    
+        <!-- Logs Display -->
+        <div *ngIf="loading" class="loading">Loading logs...</div>
+    
+        <div *ngIf="filteredLogs.length === 0 && !loading" class="no-logs">No logs found matching your criteria</div>
+    
+        <mat-card *ngFor="let log of filteredLogs" class="log-item">
+          <mat-card-header>
+            <mat-card-title> {{ getLocationName(log.location) }}</mat-card-title>
+            <mat-card-subtitle>Work Scope: {{ log.workscope }}</mat-card-subtitle>
+          </mat-card-header>
+    
+          <mat-card-content>
+            <div class="log-details">
+              <div><strong>Created:</strong> {{ log.createdAt | date: 'medium' }}</div>
+              <div><strong>Status:</strong> {{ log.isCompleted ? 'Completed' : 'Pending' }}</div>
+              <div *ngIf="log.isCompleted">
+                <strong>Completed At:</strong> {{ log.completedAt | date: 'medium' }}
+              </div>
+            </div>
+          </mat-card-content>
+    
+          <mat-card-actions>
+            <button mat-button *ngIf="!log.isCompleted" (click)="showHistoryLogs(log.location)" color="primary">See all logs</button>
+            <button mat-button *ngIf="!log.isCompleted" (click)="completeLog(log.location)" color="primary">Complete</button>
+          </mat-card-actions>
+        </mat-card>
+      </mat-card-content>
+    </mat-card>
+    
   </div>

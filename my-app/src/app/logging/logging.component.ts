@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { interval } from 'rxjs';
 import { startWith, switchMap } from 'rxjs/operators';
 import { ApiService } from '../api.service';
+import { LocationHistoryComponent } from '../location-history/location-history.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-logging',
@@ -20,7 +22,7 @@ export class LoggingComponent implements OnInit{
   filterStatus = 'all';
   filterLocation = 'all';
 
-  constructor(private apiService: ApiService) {}
+  constructor(private apiService: ApiService, private dialog: MatDialog) {}
 
   ngOnInit() {
     // Refresh logs every minute to check time windows
@@ -37,6 +39,10 @@ export class LoggingComponent implements OnInit{
         this.applyFilters();
         this.loading = false;
       });
+
+    this.apiService.getLocations().subscribe(data => {
+      this.locations = data;
+    });
   }
 
   applyFilters() {
@@ -51,7 +57,7 @@ export class LoggingComponent implements OnInit{
       
       // Location filter
       const locationMatch = this.filterLocation === 'all' || 
-        log.location._id === this.filterLocation;
+        log.location === this.filterLocation;
       
       return searchMatch && statusMatch && locationMatch;
     });
@@ -64,5 +70,23 @@ export class LoggingComponent implements OnInit{
       log.completedAt = new Date();
      }
     );
+  }
+
+  showHistoryLogs(locationId: string): void{
+      this.apiService.getLocationHistory(locationId).subscribe(
+          history => {
+            // this.selectedLocationHistory = history;
+            this.dialog.open(LocationHistoryComponent, {
+              width: '800px',
+              data: history,
+              maxHeight: '90vh'
+            });
+          }
+        );
+  }
+
+  getLocationName(locationId: string): string {
+    const location = this.locations.find(loc => loc._id === locationId);
+    return location ? location.name : 'Unknown Location'; // Default value if not found
   }
 }

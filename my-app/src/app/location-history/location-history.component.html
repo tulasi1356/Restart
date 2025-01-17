@@ -1,0 +1,63 @@
+<h2 mat-dialog-title>Location History</h2>
+    
+<mat-dialog-content>
+  <mat-list *ngIf="historyData.length > 0">
+    <mat-list-item *ngFor="let log of historyData" class="history-item">
+      <div class="history-content">
+        <div class="history-main-info">
+          <div class="history-header">
+            <span class="history-date">{{log.timestamp.$date | date:'medium'}}</span>
+            <span class="history-action">Action: {{log.action}}</span>
+          </div>
+          
+          <ng-container [ngSwitch]="log.action">
+            
+            <div class="change-details" *ngSwitchCase="'UPDATE'">
+              <div class="changes" *ngFor="let key of getChangedFields(log.oldValue, log.newValue)">
+                <strong>{{key}}:</strong>
+                <div class="change-row">
+                  <span class="old-value">Old: {{formatValue(log.oldValue[key])}}</span>
+                  <mat-icon class="arrow-icon">arrow_forward</mat-icon>
+                  <span class="new-value">New: {{formatValue(log.newValue[key])}}</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="change-details" *ngSwitchCase="'CREATE'">
+              <div class="created-values">
+                <div *ngFor="let key of getObjectKeys(log.newValue)">
+                  <strong>{{key}}:</strong> {{formatValue(log.newValue[key])}}
+                </div>
+              </div>
+            </div>
+            
+            <div class="change-details" *ngSwitchCase="'DELETE'">
+              <div class="deleted-values">
+                <div *ngFor="let key of getObjectKeys(log.oldValue)">
+                  <strong>{{key}}:</strong> {{formatValue(log.oldValue[key])}}
+                </div>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+        
+        <button 
+          mat-icon-button 
+          color="warn" 
+          (click)="deleteHistoryLog(log._id)"
+          matTooltip="Delete History Entry">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+      <mat-divider></mat-divider>
+    </mat-list-item>
+  </mat-list>
+  
+  <div *ngIf="historyData.length === 0" class="no-history">
+    <p>No history available for this location.</p>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+</mat-dialog-actions>

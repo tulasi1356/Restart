@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../api.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-workscope',
@@ -9,6 +10,8 @@ import { ApiService } from '../api.service';
   styleUrl: './workscope.component.scss'
 })
 export class WorkscopeComponent implements OnInit{
+  workScopeForm: FormGroup;
+  displayedColumns: string[] = ['name', 'duration', 'displayTime', 'variance', 'mapLocations'];
   workScopes: any[] = [];
   locations: any[] = [];
   unmappedLocations: any[] = [];
@@ -21,8 +24,17 @@ export class WorkscopeComponent implements OnInit{
   };
 
   constructor(
+    private fb: FormBuilder,
     private apiService: ApiService,
-  ) {}
+  ) {
+
+    this.workScopeForm = this.fb.group({
+      name: ['', [Validators.required, Validators.minLength(3)]],  // Name should be required and at least 3 characters
+      duration: [1, [Validators.required, Validators.min(1)]],  // Duration should be a positive number (min 1)
+      displayTime: ['', Validators.required],  // Display Time should be required
+      variance: [0, [Validators.required, Validators.min(0)]],  // Variance should be a positive number (min 0)
+    });
+  }
 
   ngOnInit() {
     this.loadWorkScopes();
@@ -50,9 +62,8 @@ export class WorkscopeComponent implements OnInit{
   }
 
   createWorkScope() {
-    if (!this.newScope.name || !this.newScope.displayTime) return;
-    
-    this.apiService.createWorkScope(this.newScope).subscribe(() => {
+    console.log('Creating work scope:',  this.workScopeForm.value);
+    this.apiService.createWorkScope(this.workScopeForm.value).subscribe(() => {
       this.loadWorkScopes();
       this.newScope = {
         name: '',

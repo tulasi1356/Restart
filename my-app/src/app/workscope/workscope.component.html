@@ -1,8 +1,8 @@
-<div class="p-4">
-    <h2 class="text-2xl font-bold mb-4">Work Scopes</h2>
+<div  style="margin: 1rem; padding: 1rem;">
+    <h2 class="text-2xl font-bold mb-4">Create WorkScope</h2>
     
     <!-- Create Work Scope Form -->
-    <form (ngSubmit)="createWorkScope()" class="mb-6 space-y-4">
+    <!-- <form (ngSubmit)="createWorkScope()" class="mb-6 space-y-4">
       <div>
         <label class="block text-sm font-medium mb-1">Name</label>
         <input 
@@ -50,10 +50,44 @@
       >
         Create Work Scope
       </button>
-    </form>
+    </form> -->
 
+
+    <form (ngSubmit)="createWorkScope()" class="mb-6 space-y-4" [formGroup]="workScopeForm">
+      <div>
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Name</mat-label>
+          <input matInput formControlName="name" />
+        </mat-form-field>
+      </div>
+      
+      <div>
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Duration (days)</mat-label>
+          <input matInput type="number" formControlName="duration" min="1" />
+        </mat-form-field>
+      </div>
+      
+      <div>
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Display Time</mat-label>
+          <input matInput type="time" formControlName="displayTime" />
+        </mat-form-field>
+      </div>
+      
+      <div>
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Variance (hours)</mat-label>
+          <input matInput type="number" formControlName="variance" min="0" />
+        </mat-form-field>
+      </div>
+      
+      <button mat-raised-button color="primary" type="submit">
+        Create Work Scope
+      </button>
+    </form>
     <!-- Work Scopes List -->
-    <div class="space-y-6">
+    <!-- <div class="space-y-6">
       <div *ngFor="let scope of workScopes" class="border rounded p-4">
         <h3 class="text-lg font-semibold mb-2">{{scope.name}}</h3>
         <div class="text-sm text-gray-600 space-y-1">
@@ -62,7 +96,7 @@
           <p>Variance: {{scope.variance}} hours</p>
         </div>
         
-        <!-- Location Mapping -->
+
         <div class="mt-4">
           <h4 class="font-medium mb-2">Map Locations</h4>
           <div class="flex gap-2">
@@ -85,5 +119,56 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
+
+    <h2 class="text-2xl font-bold mb-4">List Of WorkScopes</h2>
+    <table mat-table [dataSource]="workScopes" class="mat-elevation-z8 w-full">
+      <!-- Name Column -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef> Name </th>
+        <td mat-cell *matCellDef="let scope"> {{scope.name}} </td>
+      </ng-container>
+
+      <!-- Duration Column -->
+      <ng-container matColumnDef="duration">
+        <th mat-header-cell *matHeaderCellDef> Duration (days) </th>
+        <td mat-cell *matCellDef="let scope"> {{scope.duration}} </td>
+      </ng-container>
+
+      <!-- Display Time Column -->
+      <ng-container matColumnDef="displayTime">
+        <th mat-header-cell *matHeaderCellDef> Display Time </th>
+        <td mat-cell *matCellDef="let scope"> {{scope.displayTime}} </td>
+      </ng-container>
+
+      <!-- Variance Column -->
+      <ng-container matColumnDef="variance">
+        <th mat-header-cell *matHeaderCellDef> Variance (hours) </th>
+        <td mat-cell *matCellDef="let scope"> {{scope.variance}} </td>
+      </ng-container>
+
+      <!-- Map Locations Column -->
+      <ng-container matColumnDef="mapLocations">
+        <th mat-header-cell *matHeaderCellDef> Map Locations </th>
+        <td mat-cell *matCellDef="let scope">
+          <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Map Locations</mat-label>
+          <mat-select [(ngModel)]="selectedLocations[scope._id]" name="location">
+            <mat-option value="">Select Location</mat-option>
+            <mat-option *ngFor="let location of unmappedLocations" [value]="location._id">
+          {{location.name}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <button mat-raised-button color="accent" (click)="mapLocation(scope._id)">
+          Map
+        </button>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
   </div>

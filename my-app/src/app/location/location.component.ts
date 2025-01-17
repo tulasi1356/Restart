@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../api.service';  // Import ApiService for communication with backend
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
+import { LocationHistoryComponent } from '../location-history/location-history.component';
+// import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-location',
@@ -12,8 +16,10 @@ export class LocationComponent implements OnInit {
   locations: any[] = [];
   locationForm: FormGroup;
   editingLocation: any = null;
+  displayedColumns: string[] = ['sno', 'name', 'status', 'actions'];
+  selectedLocationHistory: any[] = [];
 
-  constructor(private apiService: ApiService, private fb: FormBuilder) {
+  constructor(private apiService: ApiService, private fb: FormBuilder, private snackBar: MatSnackBar, private dialog: MatDialog) {
     this.locationForm = this.fb.group({
       name: ['', Validators.required]
     });
@@ -64,7 +70,13 @@ export class LocationComponent implements OnInit {
   // Delete location
   deleteLocation(location: any) {
     this.apiService.deleteLocation(location._id).subscribe(() => {
+       try {
         this.getLocations();
+       } catch (error) {
+        // this.snackBar.open('Error deleting location', 'Close', {
+        //   duration: 3000,
+        // });
+       }
     });
    
   }
@@ -80,4 +92,21 @@ export class LocationComponent implements OnInit {
     this.locationForm.reset();
     this.editingLocation = null;
   }
+
+
+  viewHistory(location: any) {
+    this.apiService.getLocationHistory(location._id).subscribe(
+      history => {
+        // this.selectedLocationHistory = history;
+        this.dialog.open(LocationHistoryComponent, {
+          width: '800px',
+          data: history,
+          maxHeight: '90vh'
+        });
+      }
+    );
+  }
+  
+
+
 }

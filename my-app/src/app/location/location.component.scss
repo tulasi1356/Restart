@@ -1,0 +1,42 @@
+/* Add these styles to your location.component.css */
+.history-section {
+    margin-top: 2rem;
+    padding: 1rem;
+    border-radius: 4px;
+  }
+  
+  .history-item {
+    margin: 8px 0;
+  }
+  
+  .history-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+  }
+  
+  .history-date {
+    min-width: 200px;
+    color: #666;
+  }
+  
+  .history-action {
+    min-width: 100px;
+    font-weight: 500;
+  }
+  
+  .history-details {
+    flex-grow: 1;
+  }
+  
+  .no-history {
+    text-align: center;
+    padding: 2rem;
+    color: #666;
+  }
+  
+  mat-list-item {
+    height: auto !important;
+    margin-bottom: 8px;
+  }
