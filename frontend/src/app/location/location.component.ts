@@ -124,7 +124,13 @@ export class LocationComponent implements OnInit {
   }
 
   clearForm() {
-    this.locationForm.reset();
+
+    if (this.locationForm.valid) {
+      this.locationForm.reset();
+    }
+    // Set the form as pristine and untouched to avoid the red color
+    this.locationForm.markAsPristine();
+    this.locationForm.markAsUntouched();
     this.editingLocation = null;
   }
 
