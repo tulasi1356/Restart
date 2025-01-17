@@ -2,21 +2,27 @@ import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ApiService } from '../api.service';
+import { WorkScope } from '../models/workscope.model';
 
 @Component({
   selector: 'app-location-history',
   standalone: false,
-  
   templateUrl: './location-history.component.html',
   styleUrl: './location-history.component.scss'
 })
 export class LocationHistoryComponent {
+
+  workScopes: WorkScope[] = [];
   constructor(
     @Inject(MAT_DIALOG_DATA) public historyData: any[],
     private dialogRef: MatDialogRef<LocationHistoryComponent>,
     private apiService: ApiService,
     private snackBar: MatSnackBar
-  ) {}
+  ) {
+    this.apiService.getWorkScopes().subscribe(data => {
+      this.workScopes = data;
+    });
+  }
 
   getObjectKeys(obj: any): string[] {
     if (!obj) return [];
@@ -37,7 +43,6 @@ export class LocationHistoryComponent {
       key !== '_id' &&
       JSON.stringify(oldValue[key]) !== JSON.stringify(newValue[key])
     );
-    
     return result;
   }
 
@@ -72,6 +77,11 @@ export class LocationHistoryComponent {
         }
       }
     );
+  }
+
+  getWorkScopeName(workScopeId: string): string {
+    const workScope = this.workScopes.find(scope => scope._id === workScopeId);
+    return workScope ? workScope.name : 'Unknown Work Scope';
   }
 
 }

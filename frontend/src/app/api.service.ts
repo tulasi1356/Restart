@@ -4,6 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Location, locationHistory } from './models/location.model'; 
 import { WorkScope } from './models/workscope.model';
+import { Log } from './models/log.model';
 
 @Injectable({
   providedIn: 'root'
@@ -73,15 +74,11 @@ export class ApiService {
 
   // --------------------- Logs API ---------------------
 
-  getLogs() {
-    return this.http.get<any>(`${this.apiUrl}/logs`);
+  getLogs(): Observable<Log[]> {
+    return this.http.get<Log[]>(`${this.apiUrl}/logs`);
   }
 
-  completeLog(id: string) {
-    return this.http.put<any>(`${this.apiUrl}/logs/${id}/complete`, {});
-  }
-
-  createLog(data: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/logs`, data);
+  completeLog(id: string): Observable<{message: string}> {
+    return this.http.put<{message: string}>(`${this.apiUrl}/logs/${id}/complete`, {});
   }
 }

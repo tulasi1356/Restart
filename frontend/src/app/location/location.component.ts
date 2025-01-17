@@ -5,6 +5,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { LocationHistoryComponent } from '../location-history/location-history.component';
 import { Location } from '../models/location.model'; 
+import { WorkScope } from '../models/workscope.model';
 
 @Component({
   selector: 'app-location',
@@ -15,9 +16,10 @@ import { Location } from '../models/location.model';
 
 export class LocationComponent implements OnInit {
   locations: Location[] = [];
+  workScopes: WorkScope[] = [];
   locationForm: FormGroup;
   editingLocation: Location | null = null;
-  displayedColumns: string[] = ['sno', 'name', 'status', 'actions'];
+  displayedColumns: string[] = ['sno', 'name', 'workScope', 'status', 'actions'];
 
   constructor(private apiService: ApiService, private fb: FormBuilder, private snackBar: MatSnackBar, private dialog: MatDialog) {
     this.locationForm = this.fb.group({
@@ -27,12 +29,19 @@ export class LocationComponent implements OnInit {
 
   ngOnInit(): void {
     this.getLocations();
+    this.getWorkScopes();
   }
 
   // Fetch all locations
   getLocations() {
     this.apiService.getLocations().subscribe(data => {
       this.locations = data;
+    });
+  }
+
+  getWorkScopes() {
+    this.apiService.getWorkScopes().subscribe(data => {
+      this.workScopes = data;
     });
   }
 
@@ -129,5 +138,10 @@ export class LocationComponent implements OnInit {
         });
       }
     );
+  }
+
+  getWorkScopeName(id: string) {
+    const workScope = this.workScopes.find(scope => scope._id === id);
+    return workScope ? workScope.name : 'N/A';
   }
 }

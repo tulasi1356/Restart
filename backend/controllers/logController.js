@@ -6,8 +6,6 @@ exports.getLogs = async (req, res) => {
     const logs = await Log.find();
     const filteredLogs = await Promise.all(
       logs.map(async (log) => {
-        if (log.isCompleted) return false;
-
         const scope = await workScope.findById(log.workscope);
 
         if (!scope) return false;
@@ -45,6 +43,27 @@ exports.getLogs = async (req, res) => {
     return res.status(200).json(filteredLogs);
   } catch (error) {
     console.error("Error in getLogs", error);
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+
+exports.completeLog = async (req, res) => {
+  try {
+    const { id: logId } = req.params;
+    const log = await Log.findById(logId);
+
+    if (!log) {
+      return res.status(404).json({ message: 'Log not found' });
+    }
+
+    log.isCompleted = true;
+    log.completedAt = new Date();
+    await log.save();
+
+    return res.status(200).json({ message: 'Log marked as completed', log });
+  } catch (error) {
+    console.error('Error in completeLog', error);
     return res.status(500).json({ message: error.message });
   }
 };

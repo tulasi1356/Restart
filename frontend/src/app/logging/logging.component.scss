@@ -2,6 +2,16 @@
     width: 100%;
   }
   
+  .history-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+  }
+  .history-icon {
+    font-size: 24px;
+    vertical-align: middle;
+  }
   .filters {
     display: flex;
     gap: 16px;

@@ -1,96 +1,15 @@
-<!-- <div class="p-4">
-    <h2 class="text-2xl font-bold mb-4">Logging</h2>
-    
-
-    <div class="mb-6 space-y-4">
-      <input 
-        [(ngModel)]="searchTerm"
-        placeholder="Search logs..."
-        class="border rounded px-3 py-2 w-full"
-        (input)="applyFilters()"
-      />
-      
-      <div class="flex gap-4">
-        <select 
-          [(ngModel)]="filterStatus"
-          class="border rounded px-3 py-2"
-          (change)="applyFilters()"
-        >
-          <option value="all">All Status</option>
-          <option value="completed">Completed</option>
-          <option value="pending">Pending</option>
-        </select>
-        
-        <select 
-          [(ngModel)]="filterLocation"
-          class="border rounded px-3 py-2"
-          (change)="applyFilters()"
-        >
-          <option value="all">All Locations</option>
-          <option *ngFor="let location of locations" [value]="location._id">
-            {{location.name}}
-          </option>
-        </select>
-      </div>
-    </div>
-
-
-    <div *ngIf="loading" class="text-center py-4">
-      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto"></div>
-    </div>
-
-
-    <div *ngIf="!loading" class="space-y-4">
-      <div *ngFor="let log of filteredLogs" class="border rounded p-4">
-        <div class="flex items-center justify-between">
-          <div>
-            <h3 class="text-lg font-semibold">{{log.location.name}}</h3>
-            <p class="text-sm text-gray-600">
-              Created: {{log.createdAt | date:'medium'}}
-            </p>
-            <p class="text-sm text-gray-600">
-              Work Scope: {{log.location.workScope.name}}
-            </p>
-          </div>
-          <div>
-            <button 
-              *ngIf="!log.isCompleted"
-              (click)="completeLog(log)"
-              class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-            >
-              Complete
-            </button>
-            <span *ngIf="log.isCompleted" class="text-green-600">
-              Completed at {{log.completedAt | date:'medium'}}
-            </span>
-          </div>
-        </div>
-      </div>
-
-
-      <div *ngIf="filteredLogs.length === 0" class="text-center py-8 text-gray-500">
-        No logs found matching your criteria
-      </div>
-    </div>
-  </div> -->
-
   <div style="margin: 1rem; padding: 1rem;">
     <mat-card class="full-width">
-      <mat-card-header >
+      <mat-card-header class="history-header">
         <mat-card-title >
-          <mat-icon class="mr-2">history</mat-icon>
+          <mat-icon class="history-icon">history</mat-icon>
           Logging History
         </mat-card-title>
       </mat-card-header>
     
-      <mat-card-content>
+      <mat-card-content style="margin-top: 2rem;">
         <!-- Filter Controls -->
         <div class="filters mb-4">
-          <!-- Search Filter -->
-          <!-- <mat-form-field appearance="fill" class="filter-input">
-            <mat-label>Search Location</mat-label>
-            <input matInput [(ngModel)]="searchTerm" (ngModelChange)="applyFilters()" placeholder="Search by location name" />
-          </mat-form-field> -->
     
           <!-- Status Filter -->
           <mat-form-field appearance="fill" class="filter-select">
@@ -120,7 +39,7 @@
         <mat-card *ngFor="let log of filteredLogs" class="log-item">
           <mat-card-header>
             <mat-card-title> {{ getLocationName(log.location) }}</mat-card-title>
-            <mat-card-subtitle>Work Scope: {{ log.workscope }}</mat-card-subtitle>
+            <mat-card-subtitle>Work Scope: {{ getWorkScopeName(log.workscope) }}</mat-card-subtitle>
           </mat-card-header>
     
           <mat-card-content>
@@ -135,7 +54,7 @@
     
           <mat-card-actions>
             <button mat-button *ngIf="!log.isCompleted" (click)="showHistoryLogs(log.location)" color="primary">See all logs</button>
-            <button mat-button *ngIf="!log.isCompleted" (click)="completeLog(log.location)" color="primary">Complete</button>
+            <button mat-button *ngIf="!log.isCompleted" (click)="completeLog(log)" color="primary">Complete</button>
           </mat-card-actions>
         </mat-card>
       </mat-card-content>

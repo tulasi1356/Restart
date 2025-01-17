@@ -18,7 +18,7 @@
                 <div class="change-row">
                   <span class="old-value">Old: {{formatValue(log.oldValue[key])}}</span>
                   <mat-icon class="arrow-icon">arrow_forward</mat-icon>
-                  <span class="new-value">New: {{formatValue(log.newValue[key])}}</span>
+                    <span class="new-value">New: {{key === 'workScope' ? getWorkScopeName(log.newValue[key]) : formatValue(log.newValue[key])}}</span>
                 </div>
               </div>
             </div>
