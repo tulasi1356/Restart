@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { Location } from './models/location.model'; 
+import { Location, locationHistory } from './models/location.model'; 
 
 @Injectable({
   providedIn: 'root'
@@ -47,8 +47,8 @@ export class ApiService {
     return this.http.delete<{message: string}>(`${this.apiUrl}/locations/${id}`);
   }
 
-  getLocationHistory(locationId: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/locations/${locationId}/history`);
+  getLocationHistory(locationId: string): Observable<locationHistory[]> {
+    return this.http.get<locationHistory[]>(`${this.apiUrl}/locations/${locationId}/history`);
   }
   
   deleteHistoryLog(historyId: string): Observable<any> {
