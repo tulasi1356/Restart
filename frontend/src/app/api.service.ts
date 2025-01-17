@@ -5,12 +5,13 @@ import { catchError } from 'rxjs/operators';
 import { Location, locationHistory } from './models/location.model'; 
 import { WorkScope } from './models/workscope.model';
 import { Log } from './models/log.model';
+import { environment } from '../environment/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
-  private apiUrl = 'http://localhost:5000/api';
+  private apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 

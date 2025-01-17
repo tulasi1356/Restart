@@ -5,6 +5,7 @@ const connectDB = require('./config/db');
 const locationRoutes = require('./routes/locationRoutes');
 const workScopeRoutes = require('./routes/workScopeRoutes');
 const logRoutes = require('./routes/logRoutes');
+require('dotenv').config();
 
 // Enable CORS
 app.use(cors());
