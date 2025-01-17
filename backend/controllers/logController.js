@@ -13,18 +13,14 @@ exports.getLogs = async (req, res) => {
         if (!scope) return false;
 
         const currentTime = new Date();
-
         const duration = scope.duration;
         const startTime = scope.displayTime;
         const endtimeInHours = scope.variance;
         const createdAt = scope.createdAt;
-
         const diff = Math.abs(currentTime - createdAt);
-
         const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
 
         if (days > duration) {
-          console.log("days > duration", days, duration);
           log.isCompleted = true;
           log.save();
           return false;
@@ -32,7 +28,6 @@ exports.getLogs = async (req, res) => {
           const [startHours, startMinutes] = startTime.split(":").map(Number);
 
           const startDateTime = new Date(createdAt);
-
           startDateTime.setHours(startHours, startMinutes, 0, 0);
 
           const endDateTime = new Date(startDateTime);

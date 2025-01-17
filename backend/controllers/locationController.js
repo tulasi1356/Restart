@@ -19,13 +19,13 @@ exports.createHistoryLog = async (locationId, action, oldValue, newValue) => {
   
   const createHistoryLog = exports.createHistoryLog;
 exports.createLocation = async (req, res) => {
-    console.log('createLocation', req.body);
+    
     try {
       const location = new Location({
         name: req.body.name
       });
       const savedLocation = await location.save();
-      console.log('savedLocation', savedLocation);
+     
       await createHistoryLog(
         savedLocation._id,
         'CREATE',
