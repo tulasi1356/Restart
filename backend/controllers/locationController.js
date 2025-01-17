@@ -99,7 +99,7 @@ exports.createLocation = async (req, res) => {
       return res.status(200).json({ message: 'Location marked as complete and logs created' });
   } catch (err) {
     console.error('Error marking location complete and creating logs:', err);
-    return res.status(500).json({ error: 'Error marking location complete and creating logs' });
+    return res.status(500).json({ message: 'Error marking location complete and creating logs' });
   }
 }
 

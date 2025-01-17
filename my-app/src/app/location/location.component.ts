@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { ApiService } from '../api.service';  // Import ApiService for communication with backend
+import { ApiService } from '../api.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { LocationHistoryComponent } from '../location-history/location-history.component';
-// import { MatSnackBar } from '@angular/material/snack-bar';
+import { Location } from '../models/location.model'; 
 
 @Component({
   selector: 'app-location',
@@ -12,12 +12,12 @@ import { LocationHistoryComponent } from '../location-history/location-history.c
   styleUrls: ['./location.component.css'],
   standalone: false
 })
+
 export class LocationComponent implements OnInit {
-  locations: any[] = [];
+  locations: Location[] = [];
   locationForm: FormGroup;
-  editingLocation: any = null;
+  editingLocation: Location | null = null;
   displayedColumns: string[] = ['sno', 'name', 'status', 'actions'];
-  selectedLocationHistory: any[] = [];
 
   constructor(private apiService: ApiService, private fb: FormBuilder, private snackBar: MatSnackBar, private dialog: MatDialog) {
     this.locationForm = this.fb.group({
@@ -31,7 +31,6 @@ export class LocationComponent implements OnInit {
 
   // Fetch all locations
   getLocations() {
-    console.log("getLocations...");
     this.apiService.getLocations().subscribe(data => {
       this.locations = data;
     });
@@ -44,60 +43,85 @@ export class LocationComponent implements OnInit {
     const locationData = { name: this.locationForm.value.name };
 
     if (this.editingLocation) {
-      console.log("update...", locationData);
+    
       this.apiService.updateLocation(this.editingLocation._id, locationData).subscribe(() => {
-        console.log("updateLocation response:");
-        this.getLocations();
-        this.clearForm();
+        try {
+          this.getLocations();
+          this.clearForm();
+          this.snackBar.open('Location updated successfully', 'Close', {
+            duration: 3000,
+          });
+        } catch (err) {
+          this.snackBar.open('Not able to create the location, Can you please try after sometime', 'Close', {
+            duration: 3000,
+          });
+        }
+        
       });
+     
     } else {
-      console.log("create...", locationData);
+      
       this.apiService.createLocation(locationData).subscribe((data) => {
-        console.log("createLocation response:", data);
-        this.getLocations();
-        this.clearForm();
+        try {
+          this.getLocations();
+          this.clearForm();
+          this.snackBar.open('Location created successfully', 'Close', {
+            duration: 3000,
+          });
+        } catch (error) {
+          this.snackBar.open('Not able to create the location, Can you please try after sometime', 'Close', {
+            duration: 3000,
+          });
+        }
+        
       });
+      
+
     }
   }
 
   // Mark a location as complete
-  markComplete(location: any) {
-    this.apiService.markLocationComplete(location._id).subscribe(() => {
-      this.getLocations();
-    });
+  markComplete(location: Location) {
+    if (location.workScope === null)
+      this.snackBar.open('Please assign a work scope to this location', 'Close', {
+        duration: 3000,
+      });
+    else {
+      this.apiService.markLocationComplete(location._id).subscribe(() => {
+        this.getLocations();
+      });
+    }
   }
-
+  
   // Delete location
-  deleteLocation(location: any) {
+  deleteLocation(location: Location) {
     this.apiService.deleteLocation(location._id).subscribe(() => {
        try {
         this.getLocations();
+        this.snackBar.open('Location deleted successfully', 'Close', {
+          duration: 3000,
+        });
        } catch (error) {
-        // this.snackBar.open('Error deleting location', 'Close', {
-        //   duration: 3000,
-        // });
+        this.snackBar.open('Error deleting location', 'Close', {
+          duration: 3000,
+        });
        }
     });
-   
   }
 
-  // Edit a location
-  editLocation(location: any) {
+  editLocation(location: Location) {
     this.editingLocation = location;
     this.locationForm.patchValue({ name: location.name });
   }
 
-  // Clear form
   clearForm() {
     this.locationForm.reset();
     this.editingLocation = null;
   }
 
-
-  viewHistory(location: any) {
+  viewHistory(location: Location) {
     this.apiService.getLocationHistory(location._id).subscribe(
       history => {
-        // this.selectedLocationHistory = history;
         this.dialog.open(LocationHistoryComponent, {
           width: '800px',
           data: history,
@@ -106,7 +130,4 @@ export class LocationComponent implements OnInit {
       }
     );
   }
-  
-
-
 }

@@ -1,94 +1,51 @@
 <div class="container" style="margin: 1rem; padding: 1rem;">
-
-    <!-- <h2>Manage Locations</h2>
-
-    <form [formGroup]="locationForm" (ngSubmit)="onSubmit()">
-        <input type="text" formControlName="name" placeholder="Location Name" />
-        <button type="submit">{{ editingLocation ? 'Update Location' : 'Add Location' }}</button>
-    </form> -->
     <h2>Manage Locations</h2>
 
-    <form [formGroup]="locationForm" (ngSubmit)="onSubmit()" class="location-form" style="display: flex; flex-direction: row; gap: 1rem; align-items: center;">
+    <form [formGroup]="locationForm" (ngSubmit)="onSubmit()" class="location-form">
         <mat-form-field appearance="outline">
             <mat-label>Location Name</mat-label>
             <input matInput formControlName="name" placeholder="Location Name" />
         </mat-form-field>
-        <button mat-flat-button color="primary" type="submit">{{ editingLocation ? 'Update Location' : 'Add Location' }}</button>
+        <button style="margin-left: 0.5rem;" mat-flat-button color="primary" type="submit">{{ editingLocation ? 'Update Location' : 'Add Location' }}</button>
     </form>
-
-    <!-- <div *ngFor="let location of locations">
-        <p>{{ location.name }} 
-            <button (click)="editLocation(location)">Edit</button>
-            <button (click)="markComplete(location)">Mark Complete</button>
-            <button (click)="deleteLocation(location)">Delete</button>
-        </p>
-    </div> -->
-<table mat-table [dataSource]="locations" class="mat-elevation-z8">
-    <ng-container matColumnDef="sno">
-        <th mat-header-cell *matHeaderCellDef> S.No </th>
-        <td mat-cell *matCellDef="let element; let i = index"> {{ i + 1 }} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef> Location Name </th>
-        <td mat-cell *matCellDef="let element"> {{ element.name }} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="status">
-        <th mat-header-cell *matHeaderCellDef> Status </th>
-        <td mat-cell *matCellDef="let element"> {{ element.isComplete ? 'Completed' : 'Pending' }} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef> Actions </th>
-        <td mat-cell *matCellDef="let element">
-            <button mat-icon-button [disabled]="element.isComplete" (click)="editLocation(element)">
-                <mat-icon fontIcon="edit"></mat-icon>
-            </button>
-            <button mat-icon-button *ngIf="!element.isComplete" (click)="markComplete(element)">
-                <mat-icon fontIcon="check_circle_outline"></mat-icon>
-            </button>
-            <button mat-icon-button *ngIf="element.isComplete" disabled>
+    
+    <table mat-table [dataSource]="locations" class="mat-elevation-z8">
+       <ng-container matColumnDef="sno">
+          <th mat-header-cell *matHeaderCellDef> S.No </th>
+          <td mat-cell *matCellDef="let element; let i = index"> {{ i + 1 }} </td>
+       </ng-container>
+       <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef> Location Name </th>
+          <td mat-cell *matCellDef="let element"> {{ element.name }} </td>
+       </ng-container>
+       <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef> Status </th>
+          <td mat-cell *matCellDef="let element"> {{ element.isComplete ? 'Completed' : 'Pending' }} </td>
+       </ng-container>
+       <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef> Actions </th>
+          <td mat-cell *matCellDef="let element">
+             <button mat-icon-button [disabled]="element.isComplete" (click)="editLocation(element)">
+             <mat-icon fontIcon="edit"></mat-icon>
+             </button>
+             <button mat-icon-button *ngIf="!element.isComplete" (click)="markComplete(element)">
+             <mat-icon fontIcon="check_circle_outline"></mat-icon>
+             </button>
+             <button mat-icon-button *ngIf="element.isComplete" disabled>
                 <mat-icon fontIcon="check_circle"></mat-icon>
-            </button>
-            <button mat-icon-button [disabled]="element.isComplete" (click)="deleteLocation(element)">
-                <mat-icon fontIcon="delete"></mat-icon>
-            </button>
-            <button 
+             </button>
+             <button mat-icon-button [disabled]="element.isComplete" (click)="deleteLocation(element)">
+             <mat-icon fontIcon="delete"></mat-icon>
+             </button>
+             <button 
                 mat-icon-button 
                 (click)="viewHistory(element)" 
                 matTooltip="View History">
                 <mat-icon>history</mat-icon>
-            </button>
-        </td>
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </ng-container>
-</table>
-
-<!-- <mat-dialog-content *ngIf="selectedLocationHistory.length > 0" class="history-section mat-elevation-z2">
-    <h3>Location History</h3>
-    <mat-list>
-      <mat-list-item *ngFor="let log of selectedLocationHistory" class="history-item">
-        <div class="history-content">
-          <span class="history-date">{{log.timestamp | date:'medium'}}</span>
-          <span class="history-action">{{log.action}}</span>
-          <span class="history-details">{{log.details}}</span>
-          <button 
-            mat-icon-button 
-            color="warn" 
-            (click)="deleteHistoryLog(log._id)"
-            matTooltip="Delete History Entry">
-            <mat-icon>delete</mat-icon>
-          </button>
-        </div>
-        <mat-divider></mat-divider>
-      </mat-list-item>
-    </mat-list>
-  </mat-dialog-content>
-  
-  <div *ngIf="selectedLocationHistory.length === 0" class="no-history">
-    <p>No history available for this location.</p>
-  </div> -->
-
-</div>
+             </button>
+          </td>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+       </ng-container>
+    </table>
+ </div>

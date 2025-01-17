@@ -1,4 +1,11 @@
 /* Add these styles to your location.component.css */
+
+.location-form {
+  display: flex; 
+  align-items: center;
+  gap: 1rem;
+  
+}
 .history-section {
     margin-top: 2rem;
     padding: 1rem;
