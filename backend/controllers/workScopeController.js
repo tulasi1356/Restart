@@ -1,6 +1,7 @@
 
 const Location = require('../models/location');
 const WorkScope = require('../models/workScope');
+const createHistoryLog = require('./locationController').createHistoryLog;
 
 exports.createWorkScope = async (req, res) => {
     try {
@@ -21,9 +22,17 @@ exports.createWorkScope = async (req, res) => {
       if (location.workScope) {
         return res.status(400).json({ message: 'Location already mapped to a scope' });
       }
+      const oldLocation = location.toObject();
       
       location.workScope = scopeId;
       await location.save();
+      await createHistoryLog(
+        location._id,
+        'UPDATE',
+        oldLocation, // Pass the old location object
+        location.toObject()
+      );
+
       res.json(location);
     } catch (error) {
       res.status(400).json({ message: error.message });
