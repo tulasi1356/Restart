@@ -8,7 +8,7 @@ exports.createWorkScope = async (req, res) => {
       const workScope = new WorkScope(req.body);
       const savedWorkScope = await workScope.save();
       console.log("Insertion successful", savedWorkScope);
-      return res.status(200).json({message:  "Insertion successful", workScope: savedWorkScope});
+      return res.status(200).json(savedWorkScope);
     } catch (error) {
       console.error('Error creating work scope:', error);
       return res.status(500).json({ message: error.message });

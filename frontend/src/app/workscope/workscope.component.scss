@@ -1,0 +1,15 @@
+.mat-mdc-input-element::-webkit-calendar-picker-indicator {
+    display: block;
+  }
+  
+
+  .workScopeForm {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .workScopeForm button {
+    align-self: flex-start;
+    margin-top: 0.5rem;
+  }

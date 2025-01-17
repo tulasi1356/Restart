@@ -3,6 +3,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Location, locationHistory } from './models/location.model'; 
+import { WorkScope } from './models/workscope.model';
 
 @Injectable({
   providedIn: 'root'
@@ -58,16 +59,16 @@ export class ApiService {
   // --------------------- WorkScopes API ---------------------
 
 
-  getWorkScopes() {
-    return this.http.get<any>(`${this.apiUrl}/workscopes`);
+  getWorkScopes(): Observable<WorkScope[]> {
+    return this.http.get<WorkScope[]>(`${this.apiUrl}/workscopes`);
   }
 
-  createWorkScope(workScope: any) {
-    return this.http.post<any>(`${this.apiUrl}/workscopes`, workScope);
+  createWorkScope(workScope: WorkScope): Observable<WorkScope> {
+    return this.http.post<WorkScope>(`${this.apiUrl}/workscopes`, workScope);
   }
 
-  mapLocationToScope(locationId: string, scopeId: string) {
-    return this.http.post<any>(`${this.apiUrl}/workscopes/map`, { locationId, scopeId });
+  mapLocationToScope(locationId: string, scopeId: string): Observable<Location> {
+    return this.http.post<Location>(`${this.apiUrl}/workscopes/map`, { locationId, scopeId });
   }
 
   // --------------------- Logs API ---------------------

@@ -1,20 +1,22 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../api.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Location } from '../models/location.model'; 
+import { WorkScope } from '../models/workscope.model';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-workscope',
   standalone: false,
-  
   templateUrl: './workscope.component.html',
   styleUrl: './workscope.component.scss'
 })
 export class WorkscopeComponent implements OnInit{
   workScopeForm: FormGroup;
   displayedColumns: string[] = ['name', 'duration', 'displayTime', 'variance', 'mapLocations'];
-  workScopes: any[] = [];
-  locations: any[] = [];
-  unmappedLocations: any[] = [];
+  workScopes: WorkScope[] = [];
+  locations: Location[] = [];
+  unmappedLocations: Location[] = [];
   selectedLocations: { [key: string]: string } = {};
   newScope = {
     name: '',
@@ -26,13 +28,14 @@ export class WorkscopeComponent implements OnInit{
   constructor(
     private fb: FormBuilder,
     private apiService: ApiService,
+    private snackBar: MatSnackBar,
   ) {
 
     this.workScopeForm = this.fb.group({
-      name: ['', [Validators.required, Validators.minLength(3)]],  // Name should be required and at least 3 characters
-      duration: [1, [Validators.required, Validators.min(1)]],  // Duration should be a positive number (min 1)
-      displayTime: ['', Validators.required],  // Display Time should be required
-      variance: [0, [Validators.required, Validators.min(0)]],  // Variance should be a positive number (min 0)
+      name: ['', [Validators.required, Validators.minLength(3)]],
+      duration: [1, [Validators.required, Validators.min(1)]],
+      displayTime: ['', Validators.required],
+      variance: [0, [Validators.required, Validators.min(0)]],
     });
   }
 
@@ -43,14 +46,12 @@ export class WorkscopeComponent implements OnInit{
 
   loadWorkScopes() {
     this.apiService.getWorkScopes().subscribe((data) => {
-      console.log('Work scopes:', data);
       this.workScopes = data;
     });
   }
 
   loadLocations() {
     this.apiService.getLocations().subscribe((data) => {
-      console.log('Locations:', data);
       this.locations = data;
       this.updateUnmappedLocations();
     });
@@ -58,19 +59,20 @@ export class WorkscopeComponent implements OnInit{
 
   updateUnmappedLocations() {
     this.unmappedLocations = this.locations.filter(location => !location.workScope);
-    console.log('Unmapped locations:', this.unmappedLocations);
   }
 
   createWorkScope() {
-    console.log('Creating work scope:',  this.workScopeForm.value);
-    this.apiService.createWorkScope(this.workScopeForm.value).subscribe(() => {
-      this.loadWorkScopes();
+    this.apiService.createWorkScope(this.workScopeForm.value).subscribe((data) => {
+      this.workScopes = [...this.workScopes, data];
       this.newScope = {
         name: '',
         duration: 1,
         displayTime: '',
         variance: 1
       };
+      this.snackBar.open('Work scope created successfully', 'Close', {
+        duration: 3000,
+      });
     });
   }
 
@@ -83,11 +85,17 @@ export class WorkscopeComponent implements OnInit{
         this.loadLocations();
         this.loadWorkScopes();
         delete this.selectedLocations[scopeId];
+        this.snackBar.open('Mapped Location Successfully', 'Close', {
+          duration: 3000,
+        });
       },
       error => {
         if (error.status === 400) {
-          alert('Location is already mapped to another scope');
+          this.snackBar.open('Location is already mapped to a work scope', 'Close', {duration: 3000,
+          panelClass: ['error-snackbar']});
         }
+        this.snackBar.open('Failed to map location', 'Close', {duration: 3000,
+        panelClass: ['error-snackbar']});
       }
     );
   }

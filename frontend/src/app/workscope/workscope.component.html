@@ -1,59 +1,7 @@
 <div  style="margin: 1rem; padding: 1rem;">
     <h2 class="text-2xl font-bold mb-4">Create WorkScope</h2>
-    
-    <!-- Create Work Scope Form -->
-    <!-- <form (ngSubmit)="createWorkScope()" class="mb-6 space-y-4">
-      <div>
-        <label class="block text-sm font-medium mb-1">Name</label>
-        <input 
-          [(ngModel)]="newScope.name" 
-          name="name"
-          class="border rounded px-3 py-2 w-full"
-        />
-      </div>
-      
-      <div>
-        <label class="block text-sm font-medium mb-1">Duration (days)</label>
-        <input 
-          [(ngModel)]="newScope.duration" 
-          name="duration"
-          type="number"
-          min="1"
-          class="border rounded px-3 py-2 w-full"
-        />
-      </div>
-      
-      <div>
-        <label class="block text-sm font-medium mb-1">Display Time</label>
-        <input 
-          [(ngModel)]="newScope.displayTime" 
-          name="displayTime"
-          type="time"
-          class="border rounded px-3 py-2 w-full"
-        />
-      </div>
-      
-      <div>
-        <label class="block text-sm font-medium mb-1">Variance (hours)</label>
-        <input 
-          [(ngModel)]="newScope.variance" 
-          name="variance"
-          type="number"
-          min="0"
-          class="border rounded px-3 py-2 w-full"
-        />
-      </div>
-      
-      <button 
-        type="submit"
-        class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-      >
-        Create Work Scope
-      </button>
-    </form> -->
 
-
-    <form (ngSubmit)="createWorkScope()" class="mb-6 space-y-4" [formGroup]="workScopeForm">
+    <form (ngSubmit)="createWorkScope()" class="workScopeForm"  [formGroup]="workScopeForm">
       <div>
         <mat-form-field appearance="outline" class="w-full">
           <mat-label>Name</mat-label>
@@ -86,40 +34,6 @@
         Create Work Scope
       </button>
     </form>
-    <!-- Work Scopes List -->
-    <!-- <div class="space-y-6">
-      <div *ngFor="let scope of workScopes" class="border rounded p-4">
-        <h3 class="text-lg font-semibold mb-2">{{scope.name}}</h3>
-        <div class="text-sm text-gray-600 space-y-1">
-          <p>Duration: {{scope.duration}} days</p>
-          <p>Display Time: {{scope.displayTime}}</p>
-          <p>Variance: {{scope.variance}} hours</p>
-        </div>
-        
-
-        <div class="mt-4">
-          <h4 class="font-medium mb-2">Map Locations</h4>
-          <div class="flex gap-2">
-            <select 
-              [(ngModel)]="selectedLocations[scope._id]"
-              class="border rounded px-3 py-2 flex-grow"
-            >
-              <option value="">Select Location</option>
-              <option *ngFor="let location of unmappedLocations" 
-                      [value]="location._id">
-                {{location.name}}
-              </option>
-            </select>
-            <button 
-              (click)="mapLocation(scope._id)"
-              class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-            >
-              Map
-            </button>
-          </div>
-        </div>
-      </div>
-    </div> -->
 
     <h2 class="text-2xl font-bold mb-4">List Of WorkScopes</h2>
     <table mat-table [dataSource]="workScopes" class="mat-elevation-z8 w-full">
