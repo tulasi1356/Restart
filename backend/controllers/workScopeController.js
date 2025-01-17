@@ -7,9 +7,11 @@ exports.createWorkScope = async (req, res) => {
     try {
       const workScope = new WorkScope(req.body);
       const savedWorkScope = await workScope.save();
-      res.status(200).json({message:  "Insertion successful", workScope: savedWorkScope});
+      console.log("Insertion successful", savedWorkScope);
+      return res.status(200).json({message:  "Insertion successful", workScope: savedWorkScope});
     } catch (error) {
-      res.status(400).json({ message: error.message });
+      console.error('Error creating work scope:', error);
+      return res.status(500).json({ message: error.message });
     }
   };
   
@@ -23,17 +25,16 @@ exports.createWorkScope = async (req, res) => {
         return res.status(400).json({ message: 'Location already mapped to a scope' });
       }
       const oldLocation = location.toObject();
-      
       location.workScope = scopeId;
       await location.save();
+
       await createHistoryLog(
         location._id,
         'UPDATE',
-        oldLocation, // Pass the old location object
+        oldLocation,
         location.toObject()
       );
-
-      res.json(location);
+      res.status(200).json(location);
     } catch (error) {
       res.status(400).json({ message: error.message });
     }
@@ -42,14 +43,12 @@ exports.createWorkScope = async (req, res) => {
 
 exports.getWorkScopes = async (req, res) => {
     try {
-    const workScopes = await WorkScope.find();
-    if (workScopes.length === 0) {
-       return []
-    }
-    return workScopes;
+      const workScopes = await WorkScope.find();
+      return res.status(200).json(workScopes ?? []);
     } catch (error) {
-        console.log('error', error);
-     throw new Error(error.message);
+        console.error('Error getting work scopes:', error);
+        return res.status(500).json({ message: error.message });
+        
     }
   }
   
